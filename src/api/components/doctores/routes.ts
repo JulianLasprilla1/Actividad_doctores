@@ -1,20 +1,23 @@
-import  { Router} from 'express'
-import { DoctorController, DoctorControllerImpl } from './controller'
-import { DoctorRepository } from './repository'
-import { DoctorServiceImpl } from './service'
+import { Router } from 'express'
+import { PatientController, PatientControllerImpl } from '../pacientes/controller'
+import { PatientRepository } from '../pacientes/repository'
+import { PatientServiceImpl } from '../pacientes/service'
+import { AppointmentRepository } from '../citas/repository'
 
 
 const router = Router()
-const doctorRepository = new DoctorRepository()
-const doctorService = new DoctorServiceImpl(doctorRepository)
-const doctorController: DoctorController = new DoctorControllerImpl(doctorService)
+const patientRepository = new PatientRepository()
+const appointmentRepository = new AppointmentRepository()
+const service = new PatientServiceImpl(patientRepository, appointmentRepository)
+const controller: PatientController = new PatientControllerImpl(service)
 
 
-router.get('',  doctorController.getAllDoctors.bind(doctorController))
-router.post('/create',  doctorController.createDoctor.bind(doctorController))
-router.get('/:id',  doctorController.getDoctorById.bind(doctorController))
-router.put('/:id',  doctorController.updateDoctor.bind(doctorController))
-router.delete('/:id',  doctorController.deleteDoctor.bind(doctorController))
+router.get('', controller.getAllPatient.bind(controller))
+router.post('/create', controller.createPatient.bind(controller))
+router.get('/:id', controller.getPatientById.bind(controller))
+router.put('/:id', controller.updatePatient.bind(controller))
+router.delete('/:id', controller.deletePatient.bind(controller))
+
 
 
 export default router
